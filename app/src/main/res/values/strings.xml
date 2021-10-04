@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Notes</string>
+    <string name="content_description_add" translatable="false">content description add</string>
+    <string name="add_note">"Add note"</string>
 </resources>
