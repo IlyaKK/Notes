@@ -57,7 +57,7 @@ public class Note implements Parcelable {
         this.description = description;
     }
 
-    public int getIdNote(){
+    public int getIdNote() {
         return idNote;
     }
 
