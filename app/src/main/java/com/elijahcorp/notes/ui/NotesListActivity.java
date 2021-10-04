@@ -1,8 +1,10 @@
-package com.elijahcorp.notes;
+package com.elijahcorp.notes.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.elijahcorp.notes.R;
 
 public class NotesListActivity extends AppCompatActivity {
 
