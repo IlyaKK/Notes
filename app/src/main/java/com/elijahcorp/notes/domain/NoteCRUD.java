@@ -1,11 +1,10 @@
-package com.elijahcorp.notes.impl;
+package com.elijahcorp.notes.domain;
 
-import com.elijahcorp.notes.domain.Note;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public interface NoteCRUD {
-    List<Note> getNotes();
+    ArrayList<Note> getNotes();
 
     int createNote(Note note);
 

@@ -41,6 +41,10 @@ public class Note implements Parcelable {
         this.timeCreate = timeCreate;
     }
 
+    public String getTimeCreate() {
+        return timeCreate;
+    }
+
     public String getTitle() {
         return title;
     }
