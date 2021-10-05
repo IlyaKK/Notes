@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.elijahcorp.notes.R;
+import com.google.android.material.card.MaterialCardView;
 
 public class NoteVh extends RecyclerView.ViewHolder {
     public NoteVh(@NonNull View itemView) {
@@ -16,4 +17,5 @@ public class NoteVh extends RecyclerView.ViewHolder {
     public TextView titleTextView = itemView.findViewById(R.id.title_text_view);
     public TextView descriptionTextView = itemView.findViewById(R.id.description_text_view);
     public TextView createTimeTextView = itemView.findViewById(R.id.create_time_text_view);
+    public MaterialCardView noteCardView = itemView.findViewById(R.id.note_card_view);
 }

@@ -42,20 +42,12 @@ public class NoteImpl implements NoteCRUD {
     }
 
     @Override
-    public List<Note> updateNote(int idNote, String newTitle, String newDescription, String timeCreate) {
-        List<Note> updateNotes = new ArrayList<>();
+    public List<Note> updateNote(Note note) {
         for (int i = 0; i < cashNotes.size(); i++) {
-            if (cashNotes.get(i).getIdNote() == idNote) {
-                Note newNote = cashNotes.get(i);
-                newNote.setTitle(newTitle);
-                newNote.setDescription(newDescription);
-                newNote.setTimeCreate(timeCreate);
-                updateNotes.set(i, newNote);
-            } else {
-                updateNotes.set(i, cashNotes.get(i));
+            if (cashNotes.get(i).getIdNote() == note.getIdNote()) {
+                cashNotes.set(i, note);
             }
         }
-        cashNotes = updateNotes;
         return cashNotes;
     }
 

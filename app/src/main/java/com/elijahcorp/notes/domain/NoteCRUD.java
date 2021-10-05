@@ -10,7 +10,7 @@ public interface NoteCRUD {
 
     Note readNote(int idNote);
 
-    List<Note> updateNote(int idNote, String newTitle, String newDescription, String timeCreate);
+    List<Note> updateNote(Note note);
 
     void deleteNote(int idNote);
 }
