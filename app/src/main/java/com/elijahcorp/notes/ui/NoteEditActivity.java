@@ -16,6 +16,7 @@ public class NoteEditActivity extends AppCompatActivity {
     private MaterialToolbar editNoteTopAppBar;
     private final String CHANGE_NOTE_KEY = "change_note_key";
     private Note note;
+    private boolean isEmptyNote = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +47,13 @@ public class NoteEditActivity extends AppCompatActivity {
     }
 
     private void fillEditTexts() {
-        titleEditText.setText(note.getTitle());
-        descriptionEditText.setText(note.getDescription());
+        if (note.getTitle().isEmpty() && note.getDescription().isEmpty()) {
+            isEmptyNote = true;
+        } else {
+            titleEditText.setText(note.getTitle());
+            descriptionEditText.setText(note.getDescription());
+        }
+
     }
 
     private void initialiseNavigationIconOnClick() {
@@ -58,12 +64,18 @@ public class NoteEditActivity extends AppCompatActivity {
     }
 
     private void returnToNotesListActivity() {
-        if (titleEditText.getText() != null && descriptionEditText.getText() != null) {
+        if (titleEditText.getText() != null && descriptionEditText.getText() != null && !isEmptyNote) {
             note.setTitle(titleEditText.getText().toString());
             note.setDescription(descriptionEditText.getText().toString());
             Intent intent = new Intent();
             intent.putExtra(CHANGE_NOTE_KEY, note);
             setResult(RESULT_OK, intent);
+        } else if (titleEditText.getText() != null && descriptionEditText.getText() != null && isEmptyNote) {
+            note.setTitle(titleEditText.getText().toString());
+            note.setDescription(descriptionEditText.getText().toString());
+            Intent intent = new Intent();
+            intent.putExtra(CHANGE_NOTE_KEY, note);
+            setResult(RESULT_FIRST_USER, intent);
         }
     }
 }

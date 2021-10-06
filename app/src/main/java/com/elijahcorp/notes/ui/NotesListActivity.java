@@ -49,9 +49,17 @@ public class NotesListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add_note_menu) {
+            initialiseAddNoteToNotesList();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initialiseAddNoteToNotesList() {
+        Note note = new Note("", "");
+        Intent intent = new Intent(this, NoteEditActivity.class);
+        intent.putExtra(CHANGE_NOTE_KEY, note);
+        editNoteActivityLaunch.launch(intent);
     }
 
     private void initialiseViews() {
@@ -77,6 +85,13 @@ public class NotesListActivity extends AppCompatActivity {
                 if (data != null) {
                     Note changeNote = data.getParcelableExtra(CHANGE_NOTE_KEY);
                     setChangeNote(changeNote);
+                    notesAdapter.setData(notesCRUD.getNotes());
+                }
+            } else if (result.getResultCode() == Activity.RESULT_FIRST_USER) {
+                Intent data = result.getData();
+                if (data != null) {
+                    Note newNote = data.getParcelableExtra(CHANGE_NOTE_KEY);
+                    notesCRUD.createNote(newNote);
                     notesAdapter.setData(notesCRUD.getNotes());
                 }
             }
