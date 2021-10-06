@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">Заметки</string>
     <string name="add_note">Добавить заметку</string>
+    <string name="title">Заголовок</string>
+    <string name="description">Описание</string>
+    <string name="content_description_add">@string/add_note</string>
 </resources>

@@ -53,7 +53,6 @@ public class NoteEditActivity extends AppCompatActivity {
             titleEditText.setText(note.getTitle());
             descriptionEditText.setText(note.getDescription());
         }
-
     }
 
     private void initialiseNavigationIconOnClick() {

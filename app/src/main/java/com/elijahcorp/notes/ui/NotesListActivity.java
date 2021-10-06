@@ -84,7 +84,7 @@ public class NotesListActivity extends AppCompatActivity {
                 Intent data = result.getData();
                 if (data != null) {
                     Note changeNote = data.getParcelableExtra(CHANGE_NOTE_KEY);
-                    setChangeNote(changeNote);
+                    notesCRUD.updateNote(changeNote);
                     notesAdapter.setData(notesCRUD.getNotes());
                 }
             } else if (result.getResultCode() == Activity.RESULT_FIRST_USER) {
@@ -96,10 +96,6 @@ public class NotesListActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void setChangeNote(Note note) {
-        notesCRUD.updateNote(note);
     }
 
     private void initialiseNotesRecycleView() {
