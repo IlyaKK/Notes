@@ -25,7 +25,13 @@ public class NoteEditActivity extends AppCompatActivity {
         getNoteFromNotesList();
         fillEditTexts();
         setSupportActionBar(editNoteTopAppBar);
-        initialiseBackListener();
+        initialiseNavigationIconOnClick();
+    }
+
+    @Override
+    public void onBackPressed() {
+        returnToNotesListActivity();
+        super.onBackPressed();
     }
 
     private void initViews() {
@@ -44,16 +50,20 @@ public class NoteEditActivity extends AppCompatActivity {
         descriptionEditText.setText(note.getDescription());
     }
 
-    private void initialiseBackListener() {
+    private void initialiseNavigationIconOnClick() {
         editNoteTopAppBar.setNavigationOnClickListener(l -> {
-            if (titleEditText.getText() != null && descriptionEditText.getText() != null) {
-                note.setTitle(titleEditText.getText().toString());
-                note.setDescription(descriptionEditText.getText().toString());
-                Intent intent = new Intent();
-                intent.putExtra(CHANGE_NOTE_KEY, note);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
+            returnToNotesListActivity();
+            finish();
         });
+    }
+
+    private void returnToNotesListActivity() {
+        if (titleEditText.getText() != null && descriptionEditText.getText() != null) {
+            note.setTitle(titleEditText.getText().toString());
+            note.setDescription(descriptionEditText.getText().toString());
+            Intent intent = new Intent();
+            intent.putExtra(CHANGE_NOTE_KEY, note);
+            setResult(RESULT_OK, intent);
+        }
     }
 }
