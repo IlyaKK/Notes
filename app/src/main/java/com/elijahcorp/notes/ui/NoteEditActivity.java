@@ -1,14 +1,29 @@
 package com.elijahcorp.notes.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.elijahcorp.notes.R;
 import com.elijahcorp.notes.domain.Note;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NoteEditActivity extends AppCompatActivity {
     private TextInputEditText titleEditText;
@@ -33,6 +48,60 @@ public class NoteEditActivity extends AppCompatActivity {
     public void onBackPressed() {
         returnToNotesListActivity();
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.notes_edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.change_create_time && !isEmptyNote) {
+            initialiseChangeCreateTimeDataPicker();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initialiseChangeCreateTimeDataPicker() {
+        AtomicReference<String> data = new AtomicReference<>();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        try {
+            Date date = formatter.parse(note.getTimeCreate());
+            if (date != null) {
+                MaterialDatePicker<Long> datePicker =
+                        MaterialDatePicker.Builder.datePicker()
+                                .setTitleText("Select date")
+                                .setSelection(date.getTime())
+                                .build();
+                MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                        .setTimeFormat(TimeFormat.CLOCK_24H)
+                        .setTitleText("Select time")
+                        .setHour(Integer.parseInt(note.getTimeCreate().split(" ", 2)[1].split(":", 2)[0]))
+                        .setMinute(Integer.parseInt(note.getTimeCreate().split(" ", 2)[1].split(":", 2)[1]))
+                        .build();
+                datePicker.show(getSupportFragmentManager(), "data picker");
+                datePicker.addOnPositiveButtonClickListener(selection -> {
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(selection);
+                    timePicker.show(getSupportFragmentManager(), "time picker");
+                    data.set(format.format(calendar.getTime()));
+                });
+
+                timePicker.addOnPositiveButtonClickListener((l) -> {
+                    String time = String.format(Locale.getDefault(), "%2d:%2d", timePicker.getHour(), timePicker.getMinute());
+                    data.set(data.get() + " " + time);
+                    note.setTimeCreate(data.get());
+                });
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initViews() {

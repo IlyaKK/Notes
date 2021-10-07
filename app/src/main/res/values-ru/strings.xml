@@ -5,4 +5,5 @@
     <string name="title">Заголовок</string>
     <string name="description">Описание</string>
     <string name="content_description_add">@string/add_note</string>
+    <string name="change_create_time">Изменить время создания</string>
 </resources>

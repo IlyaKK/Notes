@@ -16,7 +16,9 @@ import android.view.MenuItem;
 
 import com.elijahcorp.notes.R;
 import com.elijahcorp.notes.domain.Note;
-import com.elijahcorp.notes.domain.NoteCRUD;
+import com.elijahcorp.notes.domain.NoteCashRepo;
+import com.elijahcorp.notes.domain.NoteFileRepo;
+import com.elijahcorp.notes.impl.NoteFileImpl;
 import com.elijahcorp.notes.impl.NoteImpl;
 import com.google.android.material.appbar.MaterialToolbar;
 
@@ -24,7 +26,8 @@ public class NotesListActivity extends AppCompatActivity {
     private MaterialToolbar topAppBar;
     private RecyclerView notesRecycleView;
     private final NotesAdapter notesAdapter = new NotesAdapter();
-    private final NoteCRUD notesCRUD = new NoteImpl();
+    private final NoteCashRepo notesCashRepo = new NoteImpl();
+    private final NoteFileRepo noteFileRepo = new NoteFileImpl();
     private final String CHANGE_NOTE_KEY = "change_note_key";
     private ActivityResultLauncher<Intent> editNoteActivityLaunch;
 
@@ -72,10 +75,7 @@ public class NotesListActivity extends AppCompatActivity {
     }
 
     private void fillExampleData() {
-        notesCRUD.createNote(new Note("Заголовок 1", "jjjjjjjfpiwejfipjkoko[wekf[okq[epfko[koekf[okjkgjkerl"));
-        notesCRUD.createNote(new Note("Заголовок 2", "jjjjjjjfpiwejfipjkoko[wekf[okq[epfko[koekf[olkwjef"));
-        notesCRUD.createNote(new Note("Заголовок 3", "jjjjjjjfpiwejfipjkoko[wekf[okq[epfko[koekf[oaiwjfio;"));
-        notesCRUD.createNote(new Note("Заголовок 4", "jjjjjjjfpiwejfipjkoko[wekf[okq[epfko[koekf[oliwrjfoiqehr;erouteup9rogh"));
+        notesCashRepo.setNotes(noteFileRepo.getNotesFromFiles(this));
     }
 
     private void initialiseGetChangeNote() {
@@ -84,15 +84,16 @@ public class NotesListActivity extends AppCompatActivity {
                 Intent data = result.getData();
                 if (data != null) {
                     Note changeNote = data.getParcelableExtra(CHANGE_NOTE_KEY);
-                    notesCRUD.updateNote(changeNote);
-                    notesAdapter.setData(notesCRUD.getNotes());
+                    notesAdapter.setData(notesCashRepo.updateNote(changeNote));
+                    noteFileRepo.updateNoteInFile(this, changeNote);
                 }
             } else if (result.getResultCode() == Activity.RESULT_FIRST_USER) {
                 Intent data = result.getData();
                 if (data != null) {
                     Note newNote = data.getParcelableExtra(CHANGE_NOTE_KEY);
-                    notesCRUD.createNote(newNote);
-                    notesAdapter.setData(notesCRUD.getNotes());
+                    int idNote = notesCashRepo.createNote(newNote);
+                    notesAdapter.setData(notesCashRepo.getNotes());
+                    noteFileRepo.saveNoteToFile(this, notesCashRepo.readNote(idNote));
                 }
             }
         });
@@ -101,7 +102,7 @@ public class NotesListActivity extends AppCompatActivity {
     private void initialiseNotesRecycleView() {
         notesRecycleView.setLayoutManager(new LinearLayoutManager(this));
         notesRecycleView.setAdapter(notesAdapter);
-        notesAdapter.setData(notesCRUD.getNotes());
+        notesAdapter.setData(notesCashRepo.getNotes());
         notesAdapter.setOnCardClickListener(this::onCardClickListener);
     }
 

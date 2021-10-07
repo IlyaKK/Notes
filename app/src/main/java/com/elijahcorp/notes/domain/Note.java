@@ -9,12 +9,19 @@ public class Note implements Parcelable {
     private String description;
     private String timeCreate;
 
+    public Note(int idNote, String title, String description, String timeCreate){
+        this.idNote = idNote;
+        this.title = title;
+        this.description = description;
+        this.timeCreate = timeCreate;
+    }
+
     public Note(String title, String description) {
         this.title = title;
         this.description = description;
     }
 
-    protected Note(Parcel in) {
+    public Note(Parcel in) {
         idNote = in.readInt();
         title = in.readString();
         description = in.readString();
