@@ -69,13 +69,9 @@ public class NoteImpl implements NoteCashRepo {
     }
 
     @Override
-    public void deleteNote(int idNote) {
-        List<Note> updateNotes = new ArrayList<>();
-        for (int i = 0; i < cashNotes.size(); i++) {
-            if (cashNotes.get(i).getIdNote() != idNote) {
-                updateNotes.add(cashNotes.get(i));
-            }
-        }
-        cashNotes = updateNotes;
+    public int deleteNote(int position) {
+        int idDeleteNote = cashNotes.get(position).getIdNote();
+        cashNotes.remove(position);
+        return idDeleteNote;
     }
 }

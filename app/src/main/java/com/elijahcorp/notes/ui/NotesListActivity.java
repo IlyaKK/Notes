@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -101,6 +102,7 @@ public class NotesListActivity extends AppCompatActivity {
 
     private void initialiseNotesRecycleView() {
         notesRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(notesRecycleView);
         notesRecycleView.setAdapter(notesAdapter);
         notesAdapter.setData(notesCashRepo.getNotes());
         notesAdapter.setOnCardClickListener(this::onCardClickListener);
@@ -111,4 +113,17 @@ public class NotesListActivity extends AppCompatActivity {
         intent.putExtra(CHANGE_NOTE_KEY, note);
         editNoteActivityLaunch.launch(intent);
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            noteFileRepo.deleteNoteFromFile(NotesListActivity.this, notesCashRepo.deleteNote(viewHolder.getAdapterPosition()));
+            notesAdapter.setData(notesCashRepo.getNotes());
+        }
+    };
 }

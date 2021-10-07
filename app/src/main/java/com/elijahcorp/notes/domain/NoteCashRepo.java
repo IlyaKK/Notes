@@ -14,5 +14,5 @@ public interface NoteCashRepo {
 
     List<Note> updateNote(Note note);
 
-    void deleteNote(int idNote);
+    int deleteNote(int idNote);
 }
