@@ -6,6 +6,45 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/background_card_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardBackgroundColor="@color/bg_card_background"
+        app:cardCornerRadius="20sp"
+        app:layout_constraintBottom_toBottomOf="@id/note_card_view"
+        app:layout_constraintEnd_toEndOf="@id/note_card_view"
+        app:layout_constraintStart_toStartOf="@id/note_card_view"
+        app:layout_constraintTop_toTopOf="@id/note_card_view">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/delete_icon"
+                android:layout_width="@dimen/ic_delete"
+                android:layout_height="@dimen/ic_delete"
+                android:layout_marginEnd="@dimen/padding_10"
+                android:src="@drawable/ic_delete_white_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding_10"
+                android:text="@string/delete"
+                android:textColor="#fff"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="@id/delete_icon"
+                app:layout_constraintEnd_toStartOf="@id/delete_icon"
+                app:layout_constraintTop_toTopOf="@id/delete_icon" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/note_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
