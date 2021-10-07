@@ -38,7 +38,7 @@ public class NoteFileImpl implements NoteFileRepo {
     }
 
     @Override
-    public void deleteNoteFromFile(Context context, int idNote) {
+    public void deleteNoteFile(Context context, int idNote) {
         String[] filesNotes = context.fileList();
         for (String fileNote : filesNotes) {
             if (fileNote.equals(String.format("%s.txt", idNote))) {

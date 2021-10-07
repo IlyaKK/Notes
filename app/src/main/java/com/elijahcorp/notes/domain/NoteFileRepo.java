@@ -10,7 +10,7 @@ public interface NoteFileRepo {
 
     void updateNoteInFile(Context context, Note note);
 
-    void deleteNoteFromFile(Context context, int idNote);
+    void deleteNoteFile(Context context, int idNote);
 
     List<Note> getNotesFromFiles(Context context);
 }
