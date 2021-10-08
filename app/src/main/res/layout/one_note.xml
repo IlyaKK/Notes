@@ -27,9 +27,9 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/delete_icon"
-                    android:layout_width="@dimen/ic_delete"
-                    android:layout_height="@dimen/ic_delete"
-                    android:layout_marginEnd="@dimen/padding_10"
+                    android:layout_width="@dimen/size_image_view"
+                    android:layout_height="@dimen/size_image_view"
+                    android:layout_marginEnd="@dimen/data_card_background_margin_end"
                     android:src="@drawable/ic_delete_white_24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -38,10 +38,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/padding_10"
+                    android:layout_marginEnd="@dimen/data_card_background_margin_end"
                     android:text="@string/delete"
-                    android:textColor="#fff"
-                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/data_card_background_text_size"
                     app:layout_constraintBottom_toBottomOf="@id/delete_icon"
                     app:layout_constraintEnd_toStartOf="@id/delete_icon"
                     app:layout_constraintTop_toTopOf="@id/delete_icon" />
@@ -73,14 +73,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="@dimen/padding_linear_layout">
 
                 <TextView
                     android:id="@+id/title_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/big_text_size"
                     android:textStyle="bold"
                     tools:text="Заголовок 1" />
 
@@ -88,18 +88,18 @@
                     android:id="@+id/description_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/margin_default"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/big_text_size"
                     tools:text="Описание 1" />
 
                 <TextView
                     android:id="@+id/create_time_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textSize="14sp"
+                    android:layout_marginTop="@dimen/margin_default"
+                    android:textSize="@dimen/small_text_size"
                     tools:text="01.01.2001 12:00" />
 
             </LinearLayout>
