@@ -1,3 +1,3 @@
 # Notes
 Application "Notes"
-![](record_working.gif|width=100)
+![](record_working.gif|width="100")
