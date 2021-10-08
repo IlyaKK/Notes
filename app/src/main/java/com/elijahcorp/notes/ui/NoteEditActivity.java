@@ -72,13 +72,13 @@ public class NoteEditActivity extends AppCompatActivity {
             Date date = formatter.parse(note.getTimeCreate());
             if (date != null) {
                 MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                        .setTitleText("Select date")
+                        .setTitleText(R.string.select_data_create)
                         .setSelection(date.getTime())
                         .build();
 
                 MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                         .setTimeFormat(TimeFormat.CLOCK_24H)
-                        .setTitleText("Select time")
+                        .setTitleText(R.string.select_time_created)
                         .setHour(Integer.parseInt(note.getTimeCreate().split(" ", 2)[1].split(":", 2)[0]))
                         .setMinute(Integer.parseInt(note.getTimeCreate().split(" ", 2)[1].split(":", 2)[1]))
                         .build();

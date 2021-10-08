@@ -13,12 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.elijahcorp.notes.R;
 import com.elijahcorp.notes.domain.Note;
@@ -27,7 +25,6 @@ import com.elijahcorp.notes.domain.NoteFileRepo;
 import com.elijahcorp.notes.impl.NoteFileImpl;
 import com.elijahcorp.notes.impl.NoteImpl;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.snackbar.Snackbar;
 
 public class NotesListActivity extends AppCompatActivity {
     private MaterialToolbar topAppBar;
@@ -37,7 +34,7 @@ public class NotesListActivity extends AppCompatActivity {
     private final NoteFileRepo noteFileRepo = new NoteFileImpl();
     private final String CHANGE_NOTE_KEY = "change_note_key";
     private ActivityResultLauncher<Intent> editNoteActivityLaunch;
-    private ItemTouchHelper.SimpleCallback simpleCallback;
+    private ItemTouchHelper.SimpleCallback swipeDeleteCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +106,7 @@ public class NotesListActivity extends AppCompatActivity {
     }
 
     private void initialiseDeleteNoteSwipe() {
-        simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        swipeDeleteCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return true;
@@ -145,7 +142,8 @@ public class NotesListActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                noteFileRepo.deleteNoteFile(NotesListActivity.this, notesCashRepo.deleteNote(viewHolder.getAdapterPosition()));
+                int idDeleteNote = notesCashRepo.deleteNote(viewHolder.getAdapterPosition());
+                noteFileRepo.deleteNoteFile(NotesListActivity.this, idDeleteNote);
                 notesAdapter.setData(notesCashRepo.getNotes());
             }
         };
@@ -156,7 +154,7 @@ public class NotesListActivity extends AppCompatActivity {
         notesRecycleView.setItemAnimator(new DefaultItemAnimator());
         notesRecycleView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         notesRecycleView.setAdapter(notesAdapter);
-        new ItemTouchHelper(simpleCallback).attachToRecyclerView(notesRecycleView);
+        new ItemTouchHelper(swipeDeleteCallback).attachToRecyclerView(notesRecycleView);
         notesAdapter.setData(notesCashRepo.getNotes());
         notesAdapter.setOnCardClickListener(this::onCardClickListener);
     }
