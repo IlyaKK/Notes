@@ -10,12 +10,18 @@ import com.elijahcorp.notes.R;
 import com.google.android.material.card.MaterialCardView;
 
 public class NoteVh extends RecyclerView.ViewHolder {
+    public TextView titleTextView;
+    public TextView descriptionTextView;
+    public TextView createTimeTextView;
+    public MaterialCardView foregroundNoteCardView;
+    public MaterialCardView backgroundCardView;
+
     public NoteVh(@NonNull View itemView) {
         super(itemView);
+        titleTextView = itemView.findViewById(R.id.title_text_view);
+        descriptionTextView = itemView.findViewById(R.id.description_text_view);
+        createTimeTextView = itemView.findViewById(R.id.create_time_text_view);
+        foregroundNoteCardView = itemView.findViewById(R.id.foreground_note_card_view);
+        backgroundCardView = itemView.findViewById(R.id.background_card_view);
     }
-
-    public TextView titleTextView = itemView.findViewById(R.id.title_text_view);
-    public TextView descriptionTextView = itemView.findViewById(R.id.description_text_view);
-    public TextView createTimeTextView = itemView.findViewById(R.id.create_time_text_view);
-    public MaterialCardView noteCardView = itemView.findViewById(R.id.note_card_view);
 }

@@ -4,16 +4,21 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.elijahcorp.notes.R;
 import com.elijahcorp.notes.domain.Note;
@@ -22,6 +27,7 @@ import com.elijahcorp.notes.domain.NoteFileRepo;
 import com.elijahcorp.notes.impl.NoteFileImpl;
 import com.elijahcorp.notes.impl.NoteImpl;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.snackbar.Snackbar;
 
 public class NotesListActivity extends AppCompatActivity {
     private MaterialToolbar topAppBar;
@@ -110,6 +116,34 @@ public class NotesListActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+                if (viewHolder != null) {
+                    getDefaultUIUtil().onSelected(((NoteVh) viewHolder).foregroundNoteCardView);
+                }
+            }
+
+            @Override
+            public void onChildDrawOver(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                        RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                        int actionState, boolean isCurrentlyActive) {
+                getDefaultUIUtil().onDrawOver(c, recyclerView, ((NoteVh) viewHolder).foregroundNoteCardView, dX, dY,
+                        actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                getDefaultUIUtil().clearView(((NoteVh) viewHolder).foregroundNoteCardView);
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+                getDefaultUIUtil().onDraw(c, recyclerView, ((NoteVh) viewHolder).foregroundNoteCardView, dX, dY,
+                        actionState, isCurrentlyActive);
+            }
+
+            @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 noteFileRepo.deleteNoteFile(NotesListActivity.this, notesCashRepo.deleteNote(viewHolder.getAdapterPosition()));
                 notesAdapter.setData(notesCashRepo.getNotes());
@@ -119,8 +153,10 @@ public class NotesListActivity extends AppCompatActivity {
 
     private void initialiseNotesRecycleView() {
         notesRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        new ItemTouchHelper(simpleCallback).attachToRecyclerView(notesRecycleView);
+        notesRecycleView.setItemAnimator(new DefaultItemAnimator());
+        notesRecycleView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         notesRecycleView.setAdapter(notesAdapter);
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(notesRecycleView);
         notesAdapter.setData(notesCashRepo.getNotes());
         notesAdapter.setOnCardClickListener(this::onCardClickListener);
     }

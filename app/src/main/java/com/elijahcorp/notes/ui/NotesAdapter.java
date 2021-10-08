@@ -37,7 +37,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteVh> {
         holder.titleTextView.setText(note.getTitle());
         holder.descriptionTextView.setText(note.getDescription());
         holder.createTimeTextView.setText(note.getTimeCreate());
-        holder.noteCardView.setOnClickListener(l -> listener.onCardClickListener(note));
+        holder.foregroundNoteCardView.setOnClickListener(l -> listener.onCardClickListener(note));
     }
 
     private Note getOneNote(int position){
