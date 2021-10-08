@@ -115,7 +115,7 @@ public class NotesListActivity extends AppCompatActivity {
             @Override
             public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
                 if (viewHolder != null) {
-                    getDefaultUIUtil().onSelected(((NoteVh) viewHolder).foregroundNoteCardView);
+                    getDefaultUIUtil().onSelected(((NoteVh) viewHolder).getForegroundNoteCardView());
                 }
             }
 
@@ -123,20 +123,20 @@ public class NotesListActivity extends AppCompatActivity {
             public void onChildDrawOver(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
                                         RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                         int actionState, boolean isCurrentlyActive) {
-                getDefaultUIUtil().onDrawOver(c, recyclerView, ((NoteVh) viewHolder).foregroundNoteCardView, dX, dY,
+                getDefaultUIUtil().onDrawOver(c, recyclerView, ((NoteVh) viewHolder).getForegroundNoteCardView(), dX, dY,
                         actionState, isCurrentlyActive);
             }
 
             @Override
             public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-                getDefaultUIUtil().clearView(((NoteVh) viewHolder).foregroundNoteCardView);
+                getDefaultUIUtil().clearView(((NoteVh) viewHolder).getForegroundNoteCardView());
             }
 
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
                                     @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                     int actionState, boolean isCurrentlyActive) {
-                getDefaultUIUtil().onDraw(c, recyclerView, ((NoteVh) viewHolder).foregroundNoteCardView, dX, dY,
+                getDefaultUIUtil().onDraw(c, recyclerView, ((NoteVh) viewHolder).getForegroundNoteCardView(), dX, dY,
                         actionState, isCurrentlyActive);
             }
 

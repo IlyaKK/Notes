@@ -2,7 +2,6 @@ package com.elijahcorp.notes.domain;
 
 import android.content.Context;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface NoteFileRepo {
