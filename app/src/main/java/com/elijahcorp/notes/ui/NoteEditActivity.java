@@ -77,13 +77,16 @@ public class NoteEditActivity extends AppCompatActivity {
                                 .setTitleText("Select date")
                                 .setSelection(date.getTime())
                                 .build();
+
                 MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                         .setTimeFormat(TimeFormat.CLOCK_24H)
                         .setTitleText("Select time")
                         .setHour(Integer.parseInt(note.getTimeCreate().split(" ", 2)[1].split(":", 2)[0]))
                         .setMinute(Integer.parseInt(note.getTimeCreate().split(" ", 2)[1].split(":", 2)[1]))
                         .build();
+
                 datePicker.show(getSupportFragmentManager(), "data picker");
+
                 datePicker.addOnPositiveButtonClickListener(selection -> {
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
                     Calendar calendar = Calendar.getInstance();
@@ -93,7 +96,7 @@ public class NoteEditActivity extends AppCompatActivity {
                 });
 
                 timePicker.addOnPositiveButtonClickListener((l) -> {
-                    String time = String.format(Locale.getDefault(), "%2d:%2d", timePicker.getHour(), timePicker.getMinute());
+                    @SuppressLint("DefaultLocale") String time = String.format("%02d:%02d", timePicker.getHour(), timePicker.getMinute());
                     data.set(data.get() + " " + time);
                     note.setTimeCreate(data.get());
                 });
