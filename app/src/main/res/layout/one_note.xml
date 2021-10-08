@@ -13,13 +13,9 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/background_card_view"
+            style="@style/NotesCardView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
-            app:cardBackgroundColor="@color/bg_card_background"
-            app:cardCornerRadius="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +41,7 @@
                     android:layout_marginEnd="@dimen/padding_10"
                     android:text="@string/delete"
                     android:textColor="#fff"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/delete_icon"
                     app:layout_constraintEnd_toStartOf="@id/delete_icon"
                     app:layout_constraintTop_toTopOf="@id/delete_icon" />
@@ -63,15 +59,12 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/foreground_note_card_view"
+            style="@style/NotesCardView.ForegroundCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
             android:checkable="true"
             android:clickable="true"
             android:focusable="true"
-            app:cardCornerRadius="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -106,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     tools:text="01.01.2001 12:00" />
 
             </LinearLayout>
