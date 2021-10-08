@@ -1,14 +1,14 @@
 package com.elijahcorp.notes.ui;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.elijahcorp.notes.R;
 import com.elijahcorp.notes.domain.Note;
@@ -22,7 +22,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class NoteEditActivity extends AppCompatActivity {
@@ -72,11 +71,10 @@ public class NoteEditActivity extends AppCompatActivity {
         try {
             Date date = formatter.parse(note.getTimeCreate());
             if (date != null) {
-                MaterialDatePicker<Long> datePicker =
-                        MaterialDatePicker.Builder.datePicker()
-                                .setTitleText("Select date")
-                                .setSelection(date.getTime())
-                                .build();
+                MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                        .setTitleText("Select date")
+                        .setSelection(date.getTime())
+                        .build();
 
                 MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                         .setTimeFormat(TimeFormat.CLOCK_24H)

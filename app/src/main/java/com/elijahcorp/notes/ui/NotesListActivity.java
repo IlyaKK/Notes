@@ -69,9 +69,7 @@ public class NotesListActivity extends AppCompatActivity {
 
     private void initialiseAddNoteToNotesList() {
         Note note = new Note("", "");
-        Intent intent = new Intent(this, NoteEditActivity.class);
-        intent.putExtra(CHANGE_NOTE_KEY, note);
-        editNoteActivityLaunch.launch(intent);
+        launchEditNoteActivity(note);
     }
 
     private void initialiseViews() {
@@ -100,7 +98,7 @@ public class NotesListActivity extends AppCompatActivity {
                 Intent data = result.getData();
                 if (data != null) {
                     Note newNote = data.getParcelableExtra(CHANGE_NOTE_KEY);
-                    if(!(newNote.getTitle().isEmpty() && newNote.getDescription().isEmpty())) {
+                    if (!(newNote.getTitle().isEmpty() && newNote.getDescription().isEmpty())) {
                         int idNote = notesCashRepo.createNote(newNote);
                         notesAdapter.setData(notesCashRepo.getNotes());
                         noteFileRepo.saveNoteToFile(this, notesCashRepo.readNote(idNote));
@@ -164,6 +162,10 @@ public class NotesListActivity extends AppCompatActivity {
     }
 
     private void onCardClickListener(Note note) {
+        launchEditNoteActivity(note);
+    }
+
+    private void launchEditNoteActivity(Note note) {
         Intent intent = new Intent(this, NoteEditActivity.class);
         intent.putExtra(CHANGE_NOTE_KEY, note);
         editNoteActivityLaunch.launch(intent);
