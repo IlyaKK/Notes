@@ -90,6 +90,7 @@ public class NotesListActivity extends AppCompatActivity {
                     Note changeNote = data.getParcelableExtra(CHANGE_NOTE_KEY);
                     notesAdapter.setData(notesCashRepo.updateNote(changeNote));
                     noteFileRepo.updateNoteInFile(this, changeNote);
+                    notesRecycleView.scrollToPosition(notesAdapter.getPositionNote(changeNote));
                 }
             } else if (result.getResultCode() == Activity.RESULT_FIRST_USER) {
                 Intent data = result.getData();
@@ -99,6 +100,7 @@ public class NotesListActivity extends AppCompatActivity {
                         int idNote = notesCashRepo.createNote(newNote);
                         notesAdapter.setData(notesCashRepo.getNotes());
                         noteFileRepo.saveNoteToFile(this, notesCashRepo.readNote(idNote));
+                        notesRecycleView.scrollToPosition(notesAdapter.getItemCount() - 1);
                     }
                 }
             }
