@@ -1,3 +1,3 @@
 # Notes
 Application "Notes"
-![](record_working.gif){:height="50%" width="50%"}
+![](record_working.gif?v=4&s=200)
