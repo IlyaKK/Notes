@@ -1,12 +1,14 @@
 package com.elijahcorp.notes.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,9 +30,16 @@ public class NoteEditActivity extends AppCompatActivity {
     private TextInputEditText titleEditText;
     private TextInputEditText descriptionEditText;
     private MaterialToolbar editNoteTopAppBar;
-    private final String CHANGE_NOTE_KEY = "change_note_key";
+    public static final String INFO_NOTE_KEY = "info_note_key";
+    public static String CHANGE_NOTE_KEY = "change_note_key";
     private Note note;
     private boolean isEmptyNote = false;
+
+    protected static void launchEditNoteActivity(ActivityResultLauncher<Intent> launcher, Context context, Note note) {
+        Intent intent = new Intent(context, NoteEditActivity.class);
+        intent.putExtra(INFO_NOTE_KEY, note);
+        launcher.launch(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +122,7 @@ public class NoteEditActivity extends AppCompatActivity {
 
     private void getNoteFromNotesList() {
         Intent intent = getIntent();
-        note = intent.getParcelableExtra(CHANGE_NOTE_KEY);
+        note = intent.getParcelableExtra(INFO_NOTE_KEY);
     }
 
     private void fillEditTexts() {
@@ -133,18 +142,16 @@ public class NoteEditActivity extends AppCompatActivity {
     }
 
     private void returnToNotesListActivity() {
-        if (titleEditText.getText() != null && descriptionEditText.getText() != null && !isEmptyNote) {
+        if (titleEditText.getText() != null && descriptionEditText.getText() != null) {
             note.setTitle(titleEditText.getText().toString());
             note.setDescription(descriptionEditText.getText().toString());
             Intent intent = new Intent();
             intent.putExtra(CHANGE_NOTE_KEY, note);
-            setResult(RESULT_OK, intent);
-        } else if (titleEditText.getText() != null && descriptionEditText.getText() != null && isEmptyNote) {
-            note.setTitle(titleEditText.getText().toString());
-            note.setDescription(descriptionEditText.getText().toString());
-            Intent intent = new Intent();
-            intent.putExtra(CHANGE_NOTE_KEY, note);
-            setResult(RESULT_FIRST_USER, intent);
+            if (isEmptyNote) {
+                setResult(RESULT_FIRST_USER, intent);
+            } else {
+                setResult(RESULT_OK, intent);
+            }
         }
     }
 }

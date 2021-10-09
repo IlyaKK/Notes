@@ -1,5 +1,13 @@
 package com.elijahcorp.notes.ui;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Canvas;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -9,14 +17,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Canvas;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import com.elijahcorp.notes.R;
 import com.elijahcorp.notes.domain.Note;
@@ -32,7 +32,6 @@ public class NotesListActivity extends AppCompatActivity {
     private final NotesAdapter notesAdapter = new NotesAdapter();
     private final NoteCashRepo notesCashRepo = new NoteImpl();
     private final NoteFileRepo noteFileRepo = new NoteFileImpl();
-    private final String CHANGE_NOTE_KEY = "change_note_key";
     private ActivityResultLauncher<Intent> editNoteActivityLaunch;
     private ItemTouchHelper.SimpleCallback swipeDeleteCallback;
 
@@ -66,7 +65,7 @@ public class NotesListActivity extends AppCompatActivity {
 
     private void initialiseAddNoteToNotesList() {
         Note note = new Note("", "");
-        launchEditNoteActivity(note);
+        NoteEditActivity.launchEditNoteActivity(editNoteActivityLaunch, this, note);
     }
 
     private void initialiseViews() {
@@ -84,25 +83,28 @@ public class NotesListActivity extends AppCompatActivity {
 
     private void initialiseGetChangeNote() {
         editNoteActivityLaunch = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-                Intent data = result.getData();
-                if (data != null) {
-                    Note changeNote = data.getParcelableExtra(CHANGE_NOTE_KEY);
-                    notesAdapter.setData(notesCashRepo.updateNote(changeNote));
-                    noteFileRepo.updateNoteInFile(this, changeNote);
-                    notesRecycleView.scrollToPosition(notesAdapter.getPositionNote(changeNote));
-                }
-            } else if (result.getResultCode() == Activity.RESULT_FIRST_USER) {
-                Intent data = result.getData();
-                if (data != null) {
-                    Note newNote = data.getParcelableExtra(CHANGE_NOTE_KEY);
-                    if (!(newNote.getTitle().isEmpty() && newNote.getDescription().isEmpty())) {
-                        int idNote = notesCashRepo.createNote(newNote);
-                        notesAdapter.setData(notesCashRepo.getNotes());
-                        noteFileRepo.saveNoteToFile(this, notesCashRepo.readNote(idNote));
-                        notesRecycleView.scrollToPosition(notesAdapter.getItemCount() - 1);
+            switch (result.getResultCode()) {
+                case Activity.RESULT_OK:
+                    Intent data = result.getData();
+                    if (data != null) {
+                        Note changeNote = data.getParcelableExtra(NoteEditActivity.CHANGE_NOTE_KEY);
+                        notesAdapter.setData(notesCashRepo.updateNote(changeNote));
+                        noteFileRepo.updateNoteInFile(this, changeNote);
+                        notesRecycleView.scrollToPosition(notesAdapter.getPositionNote(changeNote));
                     }
-                }
+                    break;
+                case Activity.RESULT_FIRST_USER:
+                    data = result.getData();
+                    if (data != null) {
+                        Note newNote = data.getParcelableExtra(NoteEditActivity.CHANGE_NOTE_KEY);
+                        if (!(newNote.getTitle().isEmpty() && newNote.getDescription().isEmpty())) {
+                            int idNote = notesCashRepo.createNote(newNote);
+                            notesAdapter.setData(notesCashRepo.getNotes());
+                            noteFileRepo.saveNoteToFile(this, notesCashRepo.readNote(idNote));
+                            notesRecycleView.scrollToPosition(notesAdapter.getItemCount() - 1);
+                        }
+                    }
+                    break;
             }
         });
     }
@@ -162,12 +164,6 @@ public class NotesListActivity extends AppCompatActivity {
     }
 
     private void onCardClickListener(Note note) {
-        launchEditNoteActivity(note);
-    }
-
-    private void launchEditNoteActivity(Note note) {
-        Intent intent = new Intent(this, NoteEditActivity.class);
-        intent.putExtra(CHANGE_NOTE_KEY, note);
-        editNoteActivityLaunch.launch(intent);
+        NoteEditActivity.launchEditNoteActivity(editNoteActivityLaunch, this, note);
     }
 }
