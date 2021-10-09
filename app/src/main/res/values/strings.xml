@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Notes</string>
+    <string name="add_note">"Add note"</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="content_description_add">@string/add_note</string>
+    <string name="change_create_time">Change create time</string>
+    <string name="delete">Delete</string>
+    <string name="select_data_create">Select date create</string>
+    <string name="select_time_created">Select time created</string>
 </resources>
