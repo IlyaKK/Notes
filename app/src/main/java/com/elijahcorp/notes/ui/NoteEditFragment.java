@@ -2,15 +2,17 @@ package com.elijahcorp.notes.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.elijahcorp.notes.R;
 import com.elijahcorp.notes.domain.Note;
@@ -26,43 +28,50 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class NoteEditActivity extends AppCompatActivity {
+public class NoteEditFragment extends Fragment {
     private TextInputEditText titleEditText;
     private TextInputEditText descriptionEditText;
-    private MaterialToolbar editNoteTopAppBar;
+    private MaterialToolbar appMaterialToolBar;
     public static final String INFO_NOTE_KEY = "info_note_key";
     public static String CHANGE_NOTE_KEY = "change_note_key";
+    public final static String NOTE_EDIT_FRAGMENT = "NOTE_EDIT_FRAGMENT";
     private Note note;
     private boolean isEmptyNote = false;
+    private Controller controller;
 
-    protected static void launchEditNoteActivity(ActivityResultLauncher<Intent> launcher, Context context, Note note) {
-        Intent intent = new Intent(context, NoteEditActivity.class);
-        intent.putExtra(INFO_NOTE_KEY, note);
-        launcher.launch(intent);
+    public NoteEditFragment(MaterialToolbar appMaterialToolBar) {
+        this.appMaterialToolBar = appMaterialToolBar;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note_edit);
-        initViews();
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof Controller) {
+            controller = (Controller) context;
+        } else {
+            throw new IllegalStateException("Activity doesn't have impl NoteEditFragment.Controller interface");
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        return inflater.inflate(R.layout.fragment_note_edit, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        initViews(view);
         getNoteFromNotesList();
         fillEditTexts();
-        setSupportActionBar(editNoteTopAppBar);
+        getNoteFromNotesList();
         initialiseNavigationIconOnClick();
     }
 
     @Override
-    public void onBackPressed() {
-        returnToNotesListActivity();
-        super.onBackPressed();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.notes_edit_menu, menu);
-        return true;
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.notes_edit_menu, menu);
     }
 
     @Override
@@ -92,13 +101,13 @@ public class NoteEditActivity extends AppCompatActivity {
                         .setMinute(Integer.parseInt(note.getTimeCreate().split(" ", 2)[1].split(":", 2)[1]))
                         .build();
 
-                datePicker.show(getSupportFragmentManager(), "data picker");
+                datePicker.show(getParentFragmentManager(), "data picker");
 
                 datePicker.addOnPositiveButtonClickListener(selection -> {
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTimeInMillis(selection);
-                    timePicker.show(getSupportFragmentManager(), "time picker");
+                    timePicker.show(getParentFragmentManager(), "time picker");
                     data.set(format.format(calendar.getTime()));
                 });
 
@@ -114,15 +123,16 @@ public class NoteEditActivity extends AppCompatActivity {
         }
     }
 
-    private void initViews() {
-        titleEditText = findViewById(R.id.title_edit_text);
-        descriptionEditText = findViewById(R.id.description_edit_text);
-        editNoteTopAppBar = findViewById(R.id.edit_note_top_app_bar);
+    private void initViews(View view) {
+        titleEditText = view.findViewById(R.id.title_edit_text);
+        descriptionEditText = view.findViewById(R.id.description_edit_text);
     }
 
     private void getNoteFromNotesList() {
-        Intent intent = getIntent();
-        note = intent.getParcelableExtra(INFO_NOTE_KEY);
+        Bundle args = getArguments();
+        if (args != null) {
+            note = args.getParcelable(INFO_NOTE_KEY);
+        }
     }
 
     private void fillEditTexts() {
@@ -135,23 +145,37 @@ public class NoteEditActivity extends AppCompatActivity {
     }
 
     private void initialiseNavigationIconOnClick() {
-        editNoteTopAppBar.setNavigationOnClickListener(l -> {
-            returnToNotesListActivity();
-            finish();
-        });
+        appMaterialToolBar.setNavigationOnClickListener(l -> returnToNotesList());
     }
 
-    private void returnToNotesListActivity() {
+    private void returnToNotesList() {
         if (titleEditText.getText() != null && descriptionEditText.getText() != null) {
-            note.setTitle(titleEditText.getText().toString());
-            note.setDescription(descriptionEditText.getText().toString());
-            Intent intent = new Intent();
-            intent.putExtra(CHANGE_NOTE_KEY, note);
             if (isEmptyNote) {
-                setResult(RESULT_FIRST_USER, intent);
+                note = new Note(titleEditText.getText().toString(), descriptionEditText.getText().toString());
+                controller.returnNewNote(note);
             } else {
-                setResult(RESULT_OK, intent);
+                note.setTitle(titleEditText.getText().toString());
+                note.setDescription(descriptionEditText.getText().toString());
+                controller.returnChangedNote(note);
             }
         }
+    }
+
+    public static NoteEditFragment newInstance(Note note, MaterialToolbar topAppBar) {
+        NoteEditFragment noteEditFragment = new NoteEditFragment(topAppBar);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(INFO_NOTE_KEY, note);
+        noteEditFragment.setArguments(bundle);
+        return noteEditFragment;
+    }
+
+    public void onBackPressed() {
+        returnToNotesList();
+    }
+
+    interface Controller {
+        void returnNewNote(Note note);
+
+        void returnChangedNote(Note note);
     }
 }
