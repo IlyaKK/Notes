@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +25,6 @@ import com.elijahcorp.notes.domain.NoteCashRepo;
 import com.elijahcorp.notes.domain.NoteFileRepo;
 import com.elijahcorp.notes.impl.NoteFileImpl;
 import com.elijahcorp.notes.impl.NoteImpl;
-import com.google.android.material.appbar.MaterialToolbar;
 
 public class NotesListFragment extends Fragment {
 
@@ -37,12 +35,18 @@ public class NotesListFragment extends Fragment {
     private ItemTouchHelper.SimpleCallback swipeDeleteCallback;
     private Controller controller;
     public static final String NOTES_LIST_FRAGMENT = "NOTES_LIST_FRAGMENT";
+    private TopAppBarListener topAppBarListener;
+
+    interface TopAppBarListener {
+        void changeTopAppBar(String nameFragment);
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof Controller) {
             controller = (Controller) context;
+            topAppBarListener = (TopAppBarListener) context;
         } else {
             throw new IllegalStateException("Activity doesn't have impl NotesListFragment.Controller interface");
         }
@@ -58,13 +62,10 @@ public class NotesListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initialiseViews(view);
+        initialiseTopAppBar();
         fillDataFromFile();
         initialiseDeleteNoteSwipe();
         initialiseNotesRecycleView();
-    }
-
-    private void initialiseViews(View view) {
-        notesRecycleView = view.findViewById(R.id.notes_recycle_view);
     }
 
     @Override
@@ -78,12 +79,20 @@ public class NotesListFragment extends Fragment {
             initialiseAddNoteToNotesList();
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     private void initialiseAddNoteToNotesList() {
         Note note = new Note("", "");
-        controller.launchEditNoteScreen(note);
+        controller.displayNoteEdit(note);
+    }
+
+    private void initialiseViews(View view) {
+        notesRecycleView = view.findViewById(R.id.notes_recycle_view);
+    }
+
+    private void initialiseTopAppBar() {
+        topAppBarListener.changeTopAppBar(NOTES_LIST_FRAGMENT);
     }
 
     private void fillDataFromFile() {
@@ -145,21 +154,18 @@ public class NotesListFragment extends Fragment {
     }
 
     private void onCardClickListener(Note note) {
-        controller.launchEditNoteScreen(note);
+        controller.displayNoteEdit(note);
     }
 
-    public void setNewNote(Note note) {
-        notesCashRepo.createNote(note);
-        noteFileRepo.saveNoteToFile(requireContext(), note);
-        notesAdapter.setData(notesCashRepo.getNotes());
-    }
-
-    public void setChangedNote(Note note) {
-        notesCashRepo.updateNote(note);
-        noteFileRepo.updateNoteInFile(requireContext(), note);
-    }
 
     interface Controller {
-        void launchEditNoteScreen(Note note);
+        void displayNoteEdit(Note note);
+    }
+
+    @Override
+    public void onDestroy() {
+        controller = null;
+        topAppBarListener = null;
+        super.onDestroy();
     }
 }

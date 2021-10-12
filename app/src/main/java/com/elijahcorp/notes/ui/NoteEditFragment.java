@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 
 import com.elijahcorp.notes.R;
 import com.elijahcorp.notes.domain.Note;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -31,16 +30,15 @@ import java.util.concurrent.atomic.AtomicReference;
 public class NoteEditFragment extends Fragment {
     private TextInputEditText titleEditText;
     private TextInputEditText descriptionEditText;
-    private MaterialToolbar appMaterialToolBar;
     public static final String INFO_NOTE_KEY = "info_note_key";
-    public static String CHANGE_NOTE_KEY = "change_note_key";
     public final static String NOTE_EDIT_FRAGMENT = "NOTE_EDIT_FRAGMENT";
     private Note note;
     private boolean isEmptyNote = false;
     private Controller controller;
+    private TopAppBarListener topAppBarListener;
 
-    public NoteEditFragment(MaterialToolbar appMaterialToolBar) {
-        this.appMaterialToolBar = appMaterialToolBar;
+    interface TopAppBarListener {
+        void changeTopAppBar(String nameFragment);
     }
 
     @Override
@@ -48,6 +46,7 @@ public class NoteEditFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof Controller) {
             controller = (Controller) context;
+            topAppBarListener = (TopAppBarListener) context;
         } else {
             throw new IllegalStateException("Activity doesn't have impl NoteEditFragment.Controller interface");
         }
@@ -63,10 +62,10 @@ public class NoteEditFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initViews(view);
+        initialiseTopAppBar();
         getNoteFromNotesList();
         fillEditTexts();
-        getNoteFromNotesList();
-        initialiseNavigationIconOnClick();
+        initialiseBackSpaceCallBack();
     }
 
     @Override
@@ -80,7 +79,7 @@ public class NoteEditFragment extends Fragment {
             initialiseChangeCreateTimeDataPicker();
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     private void initialiseChangeCreateTimeDataPicker() {
@@ -128,6 +127,10 @@ public class NoteEditFragment extends Fragment {
         descriptionEditText = view.findViewById(R.id.description_edit_text);
     }
 
+    private void initialiseTopAppBar() {
+        topAppBarListener.changeTopAppBar(NOTE_EDIT_FRAGMENT);
+    }
+
     private void getNoteFromNotesList() {
         Bundle args = getArguments();
         if (args != null) {
@@ -138,44 +141,24 @@ public class NoteEditFragment extends Fragment {
     private void fillEditTexts() {
         if (note.getTitle().isEmpty() && note.getDescription().isEmpty()) {
             isEmptyNote = true;
-        } else {
-            titleEditText.setText(note.getTitle());
-            descriptionEditText.setText(note.getDescription());
         }
+        titleEditText.setText(note.getTitle());
+        descriptionEditText.setText(note.getDescription());
     }
 
-    private void initialiseNavigationIconOnClick() {
-        appMaterialToolBar.setNavigationOnClickListener(l -> returnToNotesList());
+    private void initialiseBackSpaceCallBack() {
+        controller.initialiseNavigationIconCallBack();
     }
 
-    private void returnToNotesList() {
-        if (titleEditText.getText() != null && descriptionEditText.getText() != null) {
-            if (isEmptyNote) {
-                note = new Note(titleEditText.getText().toString(), descriptionEditText.getText().toString());
-                controller.returnNewNote(note);
-            } else {
-                note.setTitle(titleEditText.getText().toString());
-                note.setDescription(descriptionEditText.getText().toString());
-                controller.returnChangedNote(note);
-            }
-        }
-    }
-
-    public static NoteEditFragment newInstance(Note note, MaterialToolbar topAppBar) {
-        NoteEditFragment noteEditFragment = new NoteEditFragment(topAppBar);
+    public static NoteEditFragment newInstance(Note note) {
+        NoteEditFragment noteEditFragment = new NoteEditFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(INFO_NOTE_KEY, note);
         noteEditFragment.setArguments(bundle);
         return noteEditFragment;
     }
 
-    public void onBackPressed() {
-        returnToNotesList();
-    }
-
     interface Controller {
-        void returnNewNote(Note note);
-
-        void returnChangedNote(Note note);
+        void initialiseNavigationIconCallBack();
     }
 }
