@@ -71,6 +71,7 @@ public class NotesListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.notes_menu, menu);
     }
 
