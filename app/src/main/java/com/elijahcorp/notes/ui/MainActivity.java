@@ -3,7 +3,6 @@ package com.elijahcorp.notes.ui;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.elijahcorp.notes.R;
@@ -19,6 +18,15 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
         setContentView(R.layout.activity_main);
         initialiseTopAppBar();
         launchNotesListFragment();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentByTag(NoteEditFragment.NOTE_EDIT_FRAGMENT) != null) {
+            returnToBackPressed();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void initialiseTopAppBar() {
@@ -58,7 +66,11 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
             topAppBar.setNavigationIcon(null);
         } else {
             topAppBar.setTitle(" ");
-            topAppBar.setNavigationIcon(R.drawable.ic_baseline_keyboard_backspace_24);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                topAppBar.setNavigationIcon(R.drawable.ic_baseline_keyboard_backspace_24);
+            } else {
+                topAppBar.setNavigationIcon(R.drawable.ic_baseline_check_24);
+            }
         }
         setSupportActionBar(topAppBar);
     }
@@ -93,27 +105,29 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
 
     @Override
     public void initialiseNavigationIconBack() {
-        topAppBar.setNavigationOnClickListener(l -> {
-            NotesListFragment notesListFragment = (NotesListFragment) getSupportFragmentManager().findFragmentByTag(NotesListFragment.NOTES_LIST_FRAGMENT);
-            NoteEditFragment noteEditFragment = (NoteEditFragment) getSupportFragmentManager().findFragmentByTag(NoteEditFragment.NOTE_EDIT_FRAGMENT);
-            if (notesListFragment != null && noteEditFragment != null) {
-                noteEditFragment.saveChangeNote();
-                if (noteEditFragment.getArguments() != null) {
-                    Note note = noteEditFragment.getArguments().getParcelable(NoteEditFragment.CHANGE_NOTE_KEY);
-                    notesListFragment.setNoteChange(note);
-                }
+        topAppBar.setNavigationOnClickListener(l -> returnToBackPressed());
+    }
 
-                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    getSupportFragmentManager().popBackStack();
-                } else {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .remove(noteEditFragment)
-                            .commit();
-                    notesListFragment.initialiseTopAppBar();
-                }
+    private void returnToBackPressed() {
+        NotesListFragment notesListFragment = (NotesListFragment) getSupportFragmentManager().findFragmentByTag(NotesListFragment.NOTES_LIST_FRAGMENT);
+        NoteEditFragment noteEditFragment = (NoteEditFragment) getSupportFragmentManager().findFragmentByTag(NoteEditFragment.NOTE_EDIT_FRAGMENT);
+        if (notesListFragment != null && noteEditFragment != null) {
+            noteEditFragment.saveChangeNote();
+            if (noteEditFragment.getArguments() != null) {
+                Note note = noteEditFragment.getArguments().getParcelable(NoteEditFragment.CHANGE_NOTE_KEY);
+                notesListFragment.setNoteChange(note);
             }
-        });
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                getSupportFragmentManager().popBackStack();
+            } else {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .remove(noteEditFragment)
+                        .commit();
+                notesListFragment.initialiseTopAppBar();
+            }
+        }
     }
 
     @Override
