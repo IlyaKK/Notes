@@ -37,11 +37,6 @@ public class NotesListFragment extends Fragment {
     public static final String NOTES_LIST_FRAGMENT = "NOTES_LIST_FRAGMENT";
     private TopAppBarListener topAppBarListener;
 
-    interface TopAppBarListener {
-
-        void changeTopAppBar(String nameFragment);
-    }
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -174,6 +169,12 @@ public class NotesListFragment extends Fragment {
     interface Controller {
 
         void displayNoteEdit(Note note);
+
+    }
+
+    interface TopAppBarListener {
+
+        void changeTopAppBar(String nameFragment);
     }
 
     @Override

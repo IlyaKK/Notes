@@ -42,16 +42,12 @@ public class NoteEditFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         if (titleEditText.getText() != null && descriptionEditText.getText() != null) {
+            note.setTitle(titleEditText.getText().toString());
+            note.setDescription(descriptionEditText.getText().toString());
             if (isEmptyNote) {
-                note.setTitle(titleEditText.getText().toString());
-                note.setDescription(descriptionEditText.getText().toString());
                 note.setTimeCreate("");
-                outState.putParcelable(CHANGE_NOTE_KEY, note);
-            } else {
-                note.setTitle(titleEditText.getText().toString());
-                note.setDescription(descriptionEditText.getText().toString());
-                outState.putParcelable(CHANGE_NOTE_KEY, note);
             }
+            outState.putParcelable(CHANGE_NOTE_KEY, note);
         }
         super.onSaveInstanceState(outState);
     }
@@ -173,20 +169,14 @@ public class NoteEditFragment extends Fragment {
 
     public void saveChangeNote() {
         if (titleEditText.getText() != null && descriptionEditText.getText() != null) {
+            note.setTitle(titleEditText.getText().toString());
+            note.setDescription(descriptionEditText.getText().toString());
             if (isEmptyNote) {
-                note.setTitle(titleEditText.getText().toString());
-                note.setDescription(descriptionEditText.getText().toString());
                 note.setTimeCreate("");
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(CHANGE_NOTE_KEY, note);
-                setArguments(bundle);
-            } else {
-                note.setTitle(titleEditText.getText().toString());
-                note.setDescription(descriptionEditText.getText().toString());
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(CHANGE_NOTE_KEY, note);
-                setArguments(bundle);
             }
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(CHANGE_NOTE_KEY, note);
+            setArguments(bundle);
         }
     }
 
@@ -205,10 +195,7 @@ public class NoteEditFragment extends Fragment {
             } else {
                 controller.startPortEditNote(savedInstanceState);
             }
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .remove(this)
-                    .commit();
+            controller.deleteOldEditFragment(this);
         }
     }
 
@@ -219,6 +206,8 @@ public class NoteEditFragment extends Fragment {
         void startLandscapeEditNote(Bundle bundle);
 
         void startPortEditNote(Bundle savedInstanceState);
+
+        void deleteOldEditFragment(NoteEditFragment noteEditFragment);
     }
 
     interface TopAppBarListener {

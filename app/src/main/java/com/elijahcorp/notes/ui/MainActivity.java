@@ -121,10 +121,7 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 getSupportFragmentManager().popBackStack();
             } else {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .remove(noteEditFragment)
-                        .commit();
+                deleteOldEditFragment(noteEditFragment);
                 notesListFragment.initialiseTopAppBar();
             }
         }
@@ -138,5 +135,13 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     @Override
     public void startPortEditNote(Bundle bundle) {
         launchEditNoteFragmentPortrait(bundle.getParcelable(NoteEditFragment.CHANGE_NOTE_KEY));
+    }
+
+    @Override
+    public void deleteOldEditFragment(NoteEditFragment noteEditFragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .remove(noteEditFragment)
+                .commit();
     }
 }
