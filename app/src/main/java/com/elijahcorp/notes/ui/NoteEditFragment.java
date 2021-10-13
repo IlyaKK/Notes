@@ -2,6 +2,7 @@ package com.elijahcorp.notes.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,14 +32,28 @@ public class NoteEditFragment extends Fragment {
     private TextInputEditText titleEditText;
     private TextInputEditText descriptionEditText;
     public static final String INFO_NOTE_KEY = "info_note_key";
+    public static final String CHANGE_NOTE_KEY = "change_note_key";
     public final static String NOTE_EDIT_FRAGMENT = "NOTE_EDIT_FRAGMENT";
     private Note note;
     private boolean isEmptyNote = false;
     private Controller controller;
     private TopAppBarListener topAppBarListener;
 
-    interface TopAppBarListener {
-        void changeTopAppBar(String nameFragment);
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (titleEditText.getText() != null && descriptionEditText.getText() != null) {
+            if (isEmptyNote) {
+                note.setTitle(titleEditText.getText().toString());
+                note.setDescription(descriptionEditText.getText().toString());
+                note.setTimeCreate("");
+                outState.putParcelable(CHANGE_NOTE_KEY, note);
+            } else {
+                note.setTitle(titleEditText.getText().toString());
+                note.setDescription(descriptionEditText.getText().toString());
+                outState.putParcelable(CHANGE_NOTE_KEY, note);
+            }
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -66,6 +81,7 @@ public class NoteEditFragment extends Fragment {
         getNoteFromNotesList();
         fillEditTexts();
         initialiseBackSpaceCallBack();
+        changerOrientationScreen(savedInstanceState);
     }
 
     @Override
@@ -134,7 +150,11 @@ public class NoteEditFragment extends Fragment {
     private void getNoteFromNotesList() {
         Bundle args = getArguments();
         if (args != null) {
-            note = args.getParcelable(INFO_NOTE_KEY);
+            if (args.containsKey(CHANGE_NOTE_KEY)) {
+                note = args.getParcelable(CHANGE_NOTE_KEY);
+            } else {
+                note = args.getParcelable(INFO_NOTE_KEY);
+            }
         }
     }
 
@@ -147,7 +167,26 @@ public class NoteEditFragment extends Fragment {
     }
 
     private void initialiseBackSpaceCallBack() {
-        controller.initialiseNavigationIconCallBack();
+        controller.initialiseNavigationIconBack();
+    }
+
+    public void saveChangeNote() {
+        if (titleEditText.getText() != null && descriptionEditText.getText() != null) {
+            if (isEmptyNote) {
+                note.setTitle(titleEditText.getText().toString());
+                note.setDescription(descriptionEditText.getText().toString());
+                note.setTimeCreate("");
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(CHANGE_NOTE_KEY, note);
+                setArguments(bundle);
+            } else {
+                note.setTitle(titleEditText.getText().toString());
+                note.setDescription(descriptionEditText.getText().toString());
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(CHANGE_NOTE_KEY, note);
+                setArguments(bundle);
+            }
+        }
     }
 
     public static NoteEditFragment newInstance(Note note) {
@@ -158,7 +197,40 @@ public class NoteEditFragment extends Fragment {
         return noteEditFragment;
     }
 
+    private void changerOrientationScreen(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                controller.startLandscapeEditNote(savedInstanceState);
+            } else {
+                controller.startPortEditNote(savedInstanceState);
+            }
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .remove(this)
+                    .commit();
+        }
+    }
+
     interface Controller {
-        void initialiseNavigationIconCallBack();
+
+        void initialiseNavigationIconBack();
+
+        void startLandscapeEditNote(Bundle bundle);
+
+        void startPortEditNote(Bundle savedInstanceState);
+    }
+
+    interface TopAppBarListener {
+
+        void changeTopAppBar(String nameFragment);
+    }
+
+    @Override
+    public void onDestroy() {
+        controller = null;
+        topAppBarListener = null;
+        super.onDestroy();
     }
 }
+
+

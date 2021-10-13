@@ -38,6 +38,7 @@ public class NotesListFragment extends Fragment {
     private TopAppBarListener topAppBarListener;
 
     interface TopAppBarListener {
+
         void changeTopAppBar(String nameFragment);
     }
 
@@ -91,7 +92,7 @@ public class NotesListFragment extends Fragment {
         notesRecycleView = view.findViewById(R.id.notes_recycle_view);
     }
 
-    private void initialiseTopAppBar() {
+    public void initialiseTopAppBar() {
         topAppBarListener.changeTopAppBar(NOTES_LIST_FRAGMENT);
     }
 
@@ -157,8 +158,20 @@ public class NotesListFragment extends Fragment {
         controller.displayNoteEdit(note);
     }
 
+    public void setNoteChange(Note note) {
+        if (note.getTimeCreate().isEmpty()) {
+            notesCashRepo.createNote(note);
+            notesAdapter.setData(notesCashRepo.getNotes());
+            noteFileRepo.saveNoteToFile(requireContext(), note);
+        } else {
+            notesCashRepo.updateNote(note);
+            notesAdapter.setData(notesCashRepo.getNotes());
+            noteFileRepo.updateNoteInFile(requireContext(), note);
+        }
+    }
 
     interface Controller {
+
         void displayNoteEdit(Note note);
     }
 

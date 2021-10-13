@@ -3,6 +3,7 @@ package com.elijahcorp.notes.ui;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.elijahcorp.notes.R;
@@ -27,28 +28,27 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     private void launchNotesListFragment() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             launchPortraitNotesList();
+        } else {
+            launchLandscapeNotesList();
         }
     }
 
     private void launchPortraitNotesList() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container_frame_layout, new NotesListFragment())
+                .replace(R.id.fragment_container_frame_layout, new NotesListFragment(), NotesListFragment.NOTES_LIST_FRAGMENT)
                 .commit();
     }
 
-    private void launchEditNoteFragment(Note note) {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            launchEditNoteFragmentPortrait(note);
+    private void launchLandscapeNotesList() {
+        if (getSupportFragmentManager().findFragmentByTag(NotesListFragment.NOTES_LIST_FRAGMENT) != null) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_frame_layout, new NotesListFragment(), NotesListFragment.NOTES_LIST_FRAGMENT)
+                    .commit();
         }
-    }
-
-    private void launchEditNoteFragmentPortrait(Note note) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container_frame_layout, NoteEditFragment.newInstance(note))
-                .addToBackStack("")
-                .commit();
     }
 
     @Override
@@ -68,8 +68,61 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
         launchEditNoteFragment(note);
     }
 
+    private void launchEditNoteFragment(Note note) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            launchEditNoteFragmentPortrait(note);
+        } else {
+            launchEditNoteFragmentLandscape(note);
+        }
+    }
+
+    private void launchEditNoteFragmentPortrait(Note note) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container_frame_layout, NoteEditFragment.newInstance(note), NoteEditFragment.NOTE_EDIT_FRAGMENT)
+                .addToBackStack("")
+                .commit();
+    }
+
+    private void launchEditNoteFragmentLandscape(Note note) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container_2_frame_layout, NoteEditFragment.newInstance(note), NoteEditFragment.NOTE_EDIT_FRAGMENT)
+                .commit();
+    }
+
     @Override
-    public void initialiseNavigationIconCallBack() {
-        topAppBar.setNavigationOnClickListener(l -> getSupportFragmentManager().popBackStack());
+    public void initialiseNavigationIconBack() {
+        topAppBar.setNavigationOnClickListener(l -> {
+            NotesListFragment notesListFragment = (NotesListFragment) getSupportFragmentManager().findFragmentByTag(NotesListFragment.NOTES_LIST_FRAGMENT);
+            NoteEditFragment noteEditFragment = (NoteEditFragment) getSupportFragmentManager().findFragmentByTag(NoteEditFragment.NOTE_EDIT_FRAGMENT);
+            if (notesListFragment != null && noteEditFragment != null) {
+                noteEditFragment.saveChangeNote();
+                if (noteEditFragment.getArguments() != null) {
+                    Note note = noteEditFragment.getArguments().getParcelable(NoteEditFragment.CHANGE_NOTE_KEY);
+                    notesListFragment.setNoteChange(note);
+                }
+
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    getSupportFragmentManager().popBackStack();
+                } else {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .remove(noteEditFragment)
+                            .commit();
+                    notesListFragment.initialiseTopAppBar();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void startLandscapeEditNote(Bundle bundle) {
+        launchEditNoteFragmentLandscape(bundle.getParcelable(NoteEditFragment.CHANGE_NOTE_KEY));
+    }
+
+    @Override
+    public void startPortEditNote(Bundle bundle) {
+        launchEditNoteFragmentPortrait(bundle.getParcelable(NoteEditFragment.CHANGE_NOTE_KEY));
     }
 }
