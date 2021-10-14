@@ -92,7 +92,7 @@ public class NoteEditFragment extends Fragment {
             initialiseChangeCreateTimeDataPicker();
             return true;
         }
-        return true;
+        return false;
     }
 
     private void initialiseChangeCreateTimeDataPicker() {

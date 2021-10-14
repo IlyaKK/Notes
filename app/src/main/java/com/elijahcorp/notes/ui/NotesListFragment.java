@@ -76,7 +76,7 @@ public class NotesListFragment extends Fragment {
             initialiseAddNoteToNotesList();
             return true;
         }
-        return true;
+        return false;
     }
 
     private void initialiseAddNoteToNotesList() {
