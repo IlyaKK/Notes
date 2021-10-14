@@ -83,12 +83,14 @@ public class NoteEditFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.notes_edit_menu, menu);
+        if (!isEmptyNote) {
+            inflater.inflate(R.menu.notes_edit_menu, menu);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.change_create_time && !isEmptyNote) {
+        if (item.getItemId() == R.id.change_create_time) {
             initialiseChangeCreateTimeDataPicker();
             return true;
         }
