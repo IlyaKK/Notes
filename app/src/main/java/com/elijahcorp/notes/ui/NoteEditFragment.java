@@ -190,11 +190,8 @@ public class NoteEditFragment extends Fragment {
 
     private void changerOrientationScreen(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                controller.startLandscapeEditNote(savedInstanceState);
-            } else {
-                controller.startPortEditNote(savedInstanceState);
-            }
+            Note note = savedInstanceState.getParcelable(CHANGE_NOTE_KEY);
+            controller.displayNoteEdit(note);
             controller.deleteOldEditFragment(this);
         }
     }
@@ -203,9 +200,7 @@ public class NoteEditFragment extends Fragment {
 
         void initialiseNavigationIconBack();
 
-        void startLandscapeEditNote(Bundle bundle);
-
-        void startPortEditNote(Bundle savedInstanceState);
+        void displayNoteEdit(Note note);
 
         void deleteOldEditFragment(NoteEditFragment noteEditFragment);
     }

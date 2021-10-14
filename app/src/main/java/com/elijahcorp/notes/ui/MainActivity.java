@@ -128,16 +128,6 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     }
 
     @Override
-    public void startLandscapeEditNote(Bundle bundle) {
-        launchEditNoteFragmentLandscape(bundle.getParcelable(NoteEditFragment.CHANGE_NOTE_KEY));
-    }
-
-    @Override
-    public void startPortEditNote(Bundle bundle) {
-        launchEditNoteFragmentPortrait(bundle.getParcelable(NoteEditFragment.CHANGE_NOTE_KEY));
-    }
-
-    @Override
     public void deleteOldEditFragment(NoteEditFragment noteEditFragment) {
         getSupportFragmentManager()
                 .beginTransaction()
