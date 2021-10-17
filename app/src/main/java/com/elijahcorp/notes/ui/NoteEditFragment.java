@@ -59,7 +59,7 @@ public class NoteEditFragment extends Fragment {
             controller = (Controller) context;
             topAppBarListener = (TopAppBarListener) context;
         } else {
-            throw new IllegalStateException("Activity doesn't have impl NoteEditFragment.Controller interface");
+            throw new IllegalStateException("Activity doesn't have impl NoteEditFragment.Controller or NoteEditFragment.TopAppBarListener interface");
         }
     }
 

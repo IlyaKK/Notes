@@ -44,7 +44,7 @@ public class NotesListFragment extends Fragment {
             controller = (Controller) context;
             topAppBarListener = (TopAppBarListener) context;
         } else {
-            throw new IllegalStateException("Activity doesn't have impl NotesListFragment.Controller interface");
+            throw new IllegalStateException("Activity doesn't have impl NotesListFragment.Controller or NotesListFragment.TopAppBarListener interface");
         }
     }
 
