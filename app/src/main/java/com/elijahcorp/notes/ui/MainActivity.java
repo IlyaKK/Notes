@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().findFragmentByTag(NoteEditFragment.NOTE_EDIT_FRAGMENT) != null) {
-            returnToBackOrSavePressed();
+            returnOnBackOrSavePressed();
         } else {
             super.onBackPressed();
         }
@@ -105,10 +105,10 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
 
     @Override
     public void initialiseNavigationIconBack() {
-        topAppBar.setNavigationOnClickListener(l -> returnToBackOrSavePressed());
+        topAppBar.setNavigationOnClickListener(l -> returnOnBackOrSavePressed());
     }
 
-    private void returnToBackOrSavePressed() {
+    private void returnOnBackOrSavePressed() {
         NotesListFragment notesListFragment = (NotesListFragment) getSupportFragmentManager().findFragmentByTag(NotesListFragment.NOTES_LIST_FRAGMENT);
         NoteEditFragment noteEditFragment = (NoteEditFragment) getSupportFragmentManager().findFragmentByTag(NoteEditFragment.NOTE_EDIT_FRAGMENT);
         if (notesListFragment != null && noteEditFragment != null) {
