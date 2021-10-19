@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.elijahcorp.notes.R;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     public void changeTopAppBar(String nameFragment) {
         if (nameFragment.equals(NotesListFragment.NOTES_LIST_FRAGMENT)) {
             topAppBar.setTitle(R.string.app_name);
+            topAppBar.setNavigationIcon(R.drawable.ic_baseline_menu_24);
             setSupportActionBar(topAppBar);
             initDrawer();
         } else {
@@ -85,16 +87,14 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
 
     @SuppressLint("NonConstantResourceId")
     private void initDrawer() {
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, topAppBar, R.string.app_name, R.string.app_name);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        topAppBar.setNavigationOnClickListener(l -> drawer.openDrawer(GravityCompat.START, true));
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.open_main_screen_item:
                     Toast.makeText(MainActivity.this, "Открыть главную страницу", Toast.LENGTH_SHORT).show();
+                    drawer.closeDrawers();
                     return true;
                 case R.id.open_about_app_screen_item:
                     return true;
