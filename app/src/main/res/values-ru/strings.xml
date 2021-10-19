@@ -11,4 +11,10 @@
     <string name="select_time_created">Выберите время создания</string>
     <string name="about">О приложении</string>
     <string name="main">Главная</string>
+    <string name="developers">Разработчики: Касаткин Илья Константинович</string>
+    <string name="name">Название: Заметки</string>
+    <string name="version">Версия: 3.0</string>
+    <string name="navigation_drawer_open">Открыть навигационное меню</string>
+    <string name="navigation_drawer_close">Закрыть навигационное меню</string>
+    <string name="settings">Settings</string>
 </resources>
