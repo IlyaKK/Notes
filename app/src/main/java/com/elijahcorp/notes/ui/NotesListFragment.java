@@ -21,17 +21,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.elijahcorp.notes.R;
 import com.elijahcorp.notes.domain.Note;
-import com.elijahcorp.notes.domain.NoteCashRepo;
-import com.elijahcorp.notes.domain.NoteFileRepo;
-import com.elijahcorp.notes.impl.NoteFileImpl;
-import com.elijahcorp.notes.impl.NoteImpl;
+import com.elijahcorp.notes.domain.NotesRepo;
+import com.elijahcorp.notes.impl.NotesRepoImpl;
 
 public class NotesListFragment extends Fragment {
 
     private RecyclerView notesRecycleView;
     private final NotesAdapter notesAdapter = new NotesAdapter();
-    private final NoteCashRepo notesCashRepo = new NoteImpl();
-    private final NoteFileRepo noteFileRepo = new NoteFileImpl();
+    private final NotesRepo notesRepo = new NotesRepoImpl();
     private ItemTouchHelper.SimpleCallback swipeDeleteCallback;
     private Controller controller;
     public static final String NOTES_LIST_FRAGMENT = "NOTES_LIST_FRAGMENT";
@@ -93,7 +90,7 @@ public class NotesListFragment extends Fragment {
     }
 
     private void fillDataFromFile() {
-        notesCashRepo.setNotes(noteFileRepo.getNotesFromFiles(requireContext()));
+        notesRepo.readNotes(requireContext());
     }
 
     private void initialiseDeleteNoteSwipe() {
@@ -133,9 +130,8 @@ public class NotesListFragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int idDeleteNote = notesCashRepo.deleteNote(viewHolder.getAdapterPosition());
-                noteFileRepo.deleteNoteFile(requireContext(), idDeleteNote);
-                notesAdapter.setData(notesCashRepo.getNotes());
+                notesRepo.deleteNote(requireContext(), viewHolder.getAdapterPosition());
+                notesAdapter.setData(notesRepo.getNotes());
             }
         };
     }
@@ -146,7 +142,7 @@ public class NotesListFragment extends Fragment {
         notesRecycleView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         notesRecycleView.setAdapter(notesAdapter);
         new ItemTouchHelper(swipeDeleteCallback).attachToRecyclerView(notesRecycleView);
-        notesAdapter.setData(notesCashRepo.getNotes());
+        notesAdapter.setData(notesRepo.getNotes());
         notesAdapter.setOnCardClickListener(this::onCardClickListener);
     }
 
@@ -156,14 +152,11 @@ public class NotesListFragment extends Fragment {
 
     public void setNoteChange(Note note) {
         if (note.getTimeCreate().isEmpty()) {
-            notesCashRepo.createNote(note);
-            notesAdapter.setData(notesCashRepo.getNotes());
-            noteFileRepo.saveNoteToFile(requireContext(), note);
+            notesRepo.createNote(requireContext(), note);
         } else {
-            notesCashRepo.updateNote(note);
-            notesAdapter.setData(notesCashRepo.getNotes());
-            noteFileRepo.updateNoteInFile(requireContext(), note);
+            notesRepo.updateNote(requireContext(), note);
         }
+        notesAdapter.setData(notesRepo.getNotes());
     }
 
     interface Controller {

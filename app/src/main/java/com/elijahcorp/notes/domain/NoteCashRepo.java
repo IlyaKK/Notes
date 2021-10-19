@@ -8,11 +8,9 @@ public interface NoteCashRepo {
 
     ArrayList<Note> getNotes();
 
-    int createNote(Note note);
+    void createNote(Note note);
 
-    Note readNote(int idNote);
-
-    List<Note> updateNote(Note note);
+    void updateNote(Note note);
 
     int deleteNote(int position);
 }
