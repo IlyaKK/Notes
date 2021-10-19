@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     public void changeTopAppBar(String nameFragment) {
         if (nameFragment.equals(NotesListFragment.NOTES_LIST_FRAGMENT)) {
             topAppBar.setTitle(R.string.app_name);
-            topAppBar.setNavigationIcon(null);
+            topAppBar.setNavigationIcon(R.drawable.ic_baseline_menu_24);
         } else {
             topAppBar.setTitle(" ");
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
