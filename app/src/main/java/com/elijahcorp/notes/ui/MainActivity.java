@@ -1,13 +1,20 @@
 package com.elijahcorp.notes.ui;
 
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.elijahcorp.notes.R;
 import com.elijahcorp.notes.domain.Note;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NotesListFragment.Controller, NotesListFragment.TopAppBarListener, NoteEditFragment.Controller, NoteEditFragment.TopAppBarListener {
     private MaterialToolbar topAppBar;
@@ -63,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     public void changeTopAppBar(String nameFragment) {
         if (nameFragment.equals(NotesListFragment.NOTES_LIST_FRAGMENT)) {
             topAppBar.setTitle(R.string.app_name);
-            topAppBar.setNavigationIcon(R.drawable.ic_baseline_menu_24);
+            setSupportActionBar(topAppBar);
+            initDrawer();
         } else {
             topAppBar.setTitle(" ");
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -71,8 +79,29 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
             } else {
                 topAppBar.setNavigationIcon(R.drawable.ic_baseline_check_24);
             }
+            setSupportActionBar(topAppBar);
         }
-        setSupportActionBar(topAppBar);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    private void initDrawer() {
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, topAppBar, R.string.app_name, R.string.app_name);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.open_main_screen_item:
+                    Toast.makeText(MainActivity.this, "Открыть главную страницу", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.open_about_app_screen_item:
+                    return true;
+            }
+            return false;
+        });
+
     }
 
     @Override
