@@ -45,15 +45,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteVh> {
         this.listener = listener;
     }
 
-    public int getPositionNote(Note note) {
-        for (int i = 0; i < data.size(); i++) {
-            if (data.get(i).getIdNote() == note.getIdNote()) {
-                return i;
-            }
-        }
-        return 0;
-    }
-
     interface OnCardClickListener {
         void onCardClickListener(Note note);
     }

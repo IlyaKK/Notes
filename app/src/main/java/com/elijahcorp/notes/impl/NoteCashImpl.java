@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class NoteImpl implements NoteCashRepo {
+public class NoteCashImpl implements NoteCashRepo {
     private List<Note> cashNotes = new ArrayList<>();
 
     private String initCreateTime() {
@@ -30,7 +30,7 @@ public class NoteImpl implements NoteCashRepo {
     }
 
     @Override
-    public int createNote(Note note) {
+    public void createNote(Note note) {
         int newId;
         if (cashNotes.isEmpty()) {
             newId = 0;
@@ -45,27 +45,15 @@ public class NoteImpl implements NoteCashRepo {
         note.setIdNote(newId);
         note.setTimeCreate(initCreateTime());
         cashNotes.add(note);
-        return newId;
     }
 
     @Override
-    public Note readNote(int idNote) {
-        for (Note note : cashNotes) {
-            if (note.getIdNote() == idNote) {
-                return note;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public List<Note> updateNote(Note note) {
+    public void updateNote(Note note) {
         for (int i = 0; i < cashNotes.size(); i++) {
             if (cashNotes.get(i).getIdNote() == note.getIdNote()) {
                 cashNotes.set(i, note);
             }
         }
-        return cashNotes;
     }
 
     @Override
