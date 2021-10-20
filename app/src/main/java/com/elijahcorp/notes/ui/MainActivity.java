@@ -6,25 +6,31 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.elijahcorp.notes.R;
+import com.elijahcorp.notes.domain.ChangerTheme;
 import com.elijahcorp.notes.domain.Note;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NotesListFragment.Controller, NotesListFragment.TopAppBarListener, NoteEditFragment.Controller, NoteEditFragment.TopAppBarListener {
+public class MainActivity extends AppCompatActivity implements NotesListFragment.Controller, NotesListFragment.TopAppBarListener, NoteEditFragment.Controller, NoteEditFragment.TopAppBarListener,
+        AboutFragment.Controller {
     private MaterialToolbar topAppBar;
     private DrawerLayout drawer;
+    private NavigationView navigationView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
         setContentView(R.layout.activity_main);
         initialiseTopAppBar();
         launchNotesListFragment();
+        ChangerTheme.initialiseTheme(this);
     }
 
     @Override
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     private void initialiseTopAppBar() {
         topAppBar = findViewById(R.id.top_app_bar);
         drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
     }
 
     private void launchNotesListFragment() {
@@ -99,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.open_main_screen_item:
@@ -120,19 +126,36 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
         navigationView.setCheckedItem(R.id.open_main_screen_item);
     }
 
-    private void launchAboutFragment() {
-        AboutFragment aboutFragment = (AboutFragment) getSupportFragmentManager().findFragmentByTag(AboutFragment.ABOUT_FRAGMENT);
+    @Override
+    public void launchAboutFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if (aboutFragment != null) {
-            fragmentTransaction.replace(R.id.fragment_container_frame_layout, aboutFragment);
-        } else {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             fragmentTransaction.replace(R.id.fragment_container_frame_layout, new AboutFragment(), AboutFragment.ABOUT_FRAGMENT);
+        } else {
+            fragmentTransaction.replace(R.id.fragment_container_3_frame_layout, new AboutFragment(), AboutFragment.ABOUT_FRAGMENT);
         }
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void deleteAboutFragment(AboutFragment aboutFragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .remove(aboutFragment)
+                .commit();
+    }
+
     private void launchSettingsFragment() {
+        SettingsFragment settingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag(AboutFragment.ABOUT_FRAGMENT);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (settingsFragment != null) {
+            fragmentTransaction.replace(R.id.fragment_container_frame_layout, settingsFragment);
+        } else {
+            fragmentTransaction.replace(R.id.fragment_container_frame_layout, new SettingsFragment(), SettingsFragment.SETTING_FRAGMENT);
+        }
+        fragmentTransaction.commit();
     }
 
     @Override
