@@ -193,7 +193,6 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
         }
     }
 
-    @Override
     public void launchAboutFragment() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             launchPortraitAboutFragment();
@@ -224,17 +223,17 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
         }
     }
 
-    private void launchLandscapeSettingsFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container_3_frame_layout, new SettingsFragment(), SettingsFragment.SETTING_FRAGMENT);
-        fragmentTransaction.commit();
-    }
-
     private void launchPortraitSettingFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container_frame_layout, new SettingsFragment(), SettingsFragment.SETTING_FRAGMENT);
+        fragmentTransaction.commit();
+    }
+
+    private void launchLandscapeSettingsFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container_3_frame_layout, new SettingsFragment(), SettingsFragment.SETTING_FRAGMENT);
         fragmentTransaction.commit();
     }
 
