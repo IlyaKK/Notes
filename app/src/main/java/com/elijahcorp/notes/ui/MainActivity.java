@@ -86,9 +86,17 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     public void changeTopAppBar(String nameFragment) {
         switch (nameFragment) {
             case NotesListFragment.NOTES_LIST_FRAGMENT:
-            case SettingsFragment.SETTING_FRAGMENT:
-            case AboutFragment.ABOUT_FRAGMENT:
                 topAppBar.setTitle(R.string.app_name);
+                setSupportActionBar(topAppBar);
+                initDrawer();
+                break;
+            case SettingsFragment.SETTING_FRAGMENT:
+                topAppBar.setTitle(R.string.settings);
+                setSupportActionBar(topAppBar);
+                initDrawer();
+                break;
+            case AboutFragment.ABOUT_FRAGMENT:
+                topAppBar.setTitle(R.string.about);
                 setSupportActionBar(topAppBar);
                 initDrawer();
                 break;
