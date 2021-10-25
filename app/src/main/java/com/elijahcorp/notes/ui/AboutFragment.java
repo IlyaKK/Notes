@@ -37,13 +37,13 @@ public class AboutFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            controller.deleteAboutFragment(this);
+            controller.deleteOldFragment(this);
         }
         topAppBarListener.changeTopAppBar(ABOUT_FRAGMENT);
     }
 
     interface Controller {
-        void deleteAboutFragment(AboutFragment aboutFragment);
+        void deleteOldFragment(Fragment aboutFragment);
     }
 
     interface TopAppBarListener {

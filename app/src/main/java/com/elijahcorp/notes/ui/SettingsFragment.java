@@ -44,7 +44,7 @@ public class SettingsFragment extends Fragment {
         initialiseTheme();
         initialiseChangeSwitchListener();
         if (savedInstanceState != null) {
-            controller.deleteSettingFragment(this);
+            controller.deleteOldFragment(this);
         }
         topAppBarListener.changeTopAppBar(SETTING_FRAGMENT);
     }
@@ -64,7 +64,7 @@ public class SettingsFragment extends Fragment {
     }
 
     interface Controller {
-        void deleteSettingFragment(SettingsFragment settingsFragment);
+        void deleteOldFragment(Fragment settingsFragment);
     }
 
     interface TopAppBarListener {

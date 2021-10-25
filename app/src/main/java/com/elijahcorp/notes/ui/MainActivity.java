@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -283,33 +284,17 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 getSupportFragmentManager().popBackStack();
             } else {
-                deleteOldEditFragment(noteEditFragment);
+                deleteOldFragment(noteEditFragment);
                 notesListFragment.initialiseTopAppBar();
             }
         }
     }
 
     @Override
-    public void deleteSettingFragment(SettingsFragment settingsFragment) {
+    public void deleteOldFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .remove(settingsFragment)
-                .commit();
-    }
-
-    @Override
-    public void deleteAboutFragment(AboutFragment aboutFragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .remove(aboutFragment)
-                .commit();
-    }
-
-    @Override
-    public void deleteOldEditFragment(NoteEditFragment noteEditFragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .remove(noteEditFragment)
+                .remove(fragment)
                 .commit();
     }
 }
