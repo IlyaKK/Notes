@@ -16,6 +16,6 @@
     <string name="version">Версия: 3.0</string>
     <string name="navigation_drawer_open">Открыть навигационное меню</string>
     <string name="navigation_drawer_close">Закрыть навигационное меню</string>
-    <string name="settings">Settings</string>
+    <string name="settings">Настройки</string>
     <string name="night_mode">Ночной режим</string>
 </resources>
