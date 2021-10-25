@@ -15,12 +15,14 @@ import com.elijahcorp.notes.R;
 public class AboutFragment extends Fragment {
     public final static String ABOUT_FRAGMENT = "ABOUT_FRAGMENT";
     private Controller controller;
+    private TopAppBarListener topAppBarListener;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof Controller) {
             controller = (Controller) context;
+            topAppBarListener = (TopAppBarListener) context;
         } else {
             throw new IllegalStateException("Activity doesn't have impl AboutFragment.Controller");
         }
@@ -38,11 +40,17 @@ public class AboutFragment extends Fragment {
             controller.launchAboutFragment();
             controller.deleteAboutFragment(this);
         }
+        topAppBarListener.changeTopAppBar(ABOUT_FRAGMENT);
     }
 
     interface Controller {
         void launchAboutFragment();
 
         void deleteAboutFragment(AboutFragment aboutFragment);
+    }
+
+    interface TopAppBarListener {
+
+        void changeTopAppBar(String nameFragment);
     }
 }
