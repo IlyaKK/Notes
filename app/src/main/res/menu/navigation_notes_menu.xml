@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/navigation_menu_group"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/open_main_screen_item"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="@string/main" />
+        <item
+            android:id="@+id/open_settings_screen_item"
+            android:icon="@drawable/ic_baseline_settings_24"
+            android:title="@string/settings" />
+        <item
+            android:id="@+id/open_about_app_screen_item"
+            android:icon="@drawable/ic_baseline_info_24"
+            android:title="@string/about" />
+    </group>
+
+</menu>

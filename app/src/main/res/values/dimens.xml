@@ -15,5 +15,5 @@
 
     <dimen name="size_image_view">30dp</dimen>
 
-    <dimen name="padding_linear_layout">10dp</dimen>
+    <dimen name="padding_card_view">10dp</dimen>
 </resources>

@@ -193,7 +193,7 @@ public class NoteEditFragment extends Fragment {
         if (savedInstanceState != null) {
             Note note = savedInstanceState.getParcelable(CHANGE_NOTE_KEY);
             controller.displayNoteEdit(note);
-            controller.deleteOldEditFragment(this);
+            controller.deleteOldFragment(this);
         }
     }
 
@@ -203,7 +203,7 @@ public class NoteEditFragment extends Fragment {
 
         void displayNoteEdit(Note note);
 
-        void deleteOldEditFragment(NoteEditFragment noteEditFragment);
+        void deleteOldFragment(Fragment noteEditFragment);
     }
 
     interface TopAppBarListener {

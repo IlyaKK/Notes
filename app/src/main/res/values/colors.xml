@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="bg_card_background">#fa315b</color>
     <color name="fg_card_background">#F8B34E</color>
+    <color name="fg_card_background_night">@color/purple_500</color>
     <color name="black_yellow">#AF6900</color>
     <color name="light_yellow">#FFA114</color>
 </resources>
