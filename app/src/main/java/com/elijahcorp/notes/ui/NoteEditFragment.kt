@@ -47,7 +47,11 @@ class NoteEditFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_note_edit, container, false)
     }
@@ -55,7 +59,7 @@ class NoteEditFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews(view)
         initialiseTopAppBar()
-        noteFromNotesList
+        noteFromNotesList()
         fillEditTexts()
         initialiseBackSpaceCallBack()
         changerOrientationScreen(savedInstanceState)
@@ -83,15 +87,19 @@ class NoteEditFragment : Fragment() {
             val date = formatter.parse(note.timeCreate)
             if (date != null) {
                 val datePicker = MaterialDatePicker.Builder.datePicker()
-                        .setTitleText(R.string.select_data_create)
-                        .setSelection(date.time)
-                        .build()
+                    .setTitleText(R.string.select_data_create)
+                    .setSelection(date.time)
+                    .build()
                 val timePicker = MaterialTimePicker.Builder()
-                        .setTimeFormat(TimeFormat.CLOCK_24H)
-                        .setTitleText(R.string.select_time_created)
-                        .setHour(Pattern.compile(" ").split(note.timeCreate, 2)[1].split(":")[0].toInt())
-                        .setMinute(Pattern.compile(" ").split(note.timeCreate, 2)[1].split(":")[1].toInt())
-                        .build()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setTitleText(R.string.select_time_created)
+                    .setHour(
+                        Pattern.compile(" ").split(note.timeCreate, 2)[1].split(":")[0].toInt()
+                    )
+                    .setMinute(
+                        Pattern.compile(" ").split(note.timeCreate, 2)[1].split(":")[1].toInt()
+                    )
+                    .build()
                 datePicker.show(parentFragmentManager, "data picker")
                 datePicker.addOnPositiveButtonClickListener { selection: Long? ->
                     @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("dd.MM.yyyy")
@@ -101,7 +109,8 @@ class NoteEditFragment : Fragment() {
                     data.set(format.format(calendar.time))
                 }
                 timePicker.addOnPositiveButtonClickListener {
-                    @SuppressLint("DefaultLocale") val time = String.format("%02d:%02d", timePicker.hour, timePicker.minute)
+                    @SuppressLint("DefaultLocale") val time =
+                        String.format("%02d:%02d", timePicker.hour, timePicker.minute)
                     data.set(data.get().toString() + " " + time)
                     note.timeCreate = data.get()
                 }
@@ -120,17 +129,16 @@ class NoteEditFragment : Fragment() {
         topAppBarListener!!.changeTopAppBar(NOTE_EDIT_FRAGMENT)
     }
 
-    private val noteFromNotesList: Unit
-        get() {
-            val args = arguments
-            if (args != null) {
-                note = if (args.containsKey(CHANGE_NOTE_KEY)) {
-                    args.getParcelable(CHANGE_NOTE_KEY)!!
-                } else {
-                    args.getParcelable(INFO_NOTE_KEY)!!
-                }
+    private fun noteFromNotesList() {
+        arguments?.let {
+            note = if (it.containsKey(CHANGE_NOTE_KEY)) {
+                it.getParcelable(CHANGE_NOTE_KEY)!!
+            } else {
+                it.getParcelable(INFO_NOTE_KEY)!!
             }
         }
+    }
+
 
     private fun fillEditTexts() {
         if (note.title.isEmpty() && note.description.isEmpty()) {
