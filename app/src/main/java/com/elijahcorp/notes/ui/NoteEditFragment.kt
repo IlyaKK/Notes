@@ -185,7 +185,6 @@ class NoteEditFragment : Fragment() {
         const val INFO_NOTE_KEY = "info_note_key"
         const val CHANGE_NOTE_KEY = "change_note_key"
         const val NOTE_EDIT_FRAGMENT = "NOTE_EDIT_FRAGMENT"
-        @JvmStatic
         fun newInstance(note: Note?): NoteEditFragment {
             val noteEditFragment = NoteEditFragment()
             val bundle = Bundle()

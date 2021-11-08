@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
 
     @Override
     public void changeTopAppBar(String nameFragment) {
-        switch (nameFragment) {
+        switch (Objects.requireNonNull(nameFragment)) {
             case NotesListFragment.NOTES_LIST_FRAGMENT:
                 topAppBar.setTitle(R.string.app_name);
                 setSupportActionBar(topAppBar);
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     private void launchEditNoteFragmentPortrait(Note note) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container_frame_layout, NoteEditFragment.newInstance(note), NoteEditFragment.NOTE_EDIT_FRAGMENT)
+                .replace(R.id.fragment_container_frame_layout, NoteEditFragment.Companion.newInstance(note), NoteEditFragment.NOTE_EDIT_FRAGMENT)
                 .addToBackStack("")
                 .commit();
     }
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
     private void launchEditNoteFragmentLandscape(Note note) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container_2_frame_layout, NoteEditFragment.newInstance(note), NoteEditFragment.NOTE_EDIT_FRAGMENT)
+                .replace(R.id.fragment_container_2_frame_layout, NoteEditFragment.Companion.newInstance(note), NoteEditFragment.NOTE_EDIT_FRAGMENT)
                 .commit();
     }
 
